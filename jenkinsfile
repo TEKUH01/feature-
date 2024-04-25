@@ -2,32 +2,51 @@ pipeline {
     agent any
     
     stages {
-        stage('Build') {
+        stage('Generate Sample Data') {
             steps {
-                echo 'Building...'
-                // Add build steps here
+                script {
+                    // Generate sample student data
+                    writeFile file: 'students.csv', text: """
+                        1,John Doe,A
+                        2,Jane Smith,B
+                        3,Michael Johnson,C
+                        4,Emily Brown,A
+                        5,David Lee,B
+                    """
+                    
+                    // Display the generated sample data
+                    echo "Generated sample student data:"
+                    sh 'cat students.csv'
+                }
             }
         }
-        stage('Test') {
+        
+        stage('Register Students') {
             steps {
-                echo 'Testing...'
-                // Add test steps here
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying...'
-                // Add deployment steps here
+                script {
+                    // Loop through each line in the CSV file and simulate registering the students
+                    def studentsData = readFile 'students.csv'
+                    studentsData.eachLine { line ->
+                        def (id, name, grade) = line.split(',')
+                        
+                        // Simulate registering the student
+                        echo "Registering student: $name (ID: $id, Grade: $grade)"
+                        sleep 1  // Simulate some processing time
+                        
+                        // Output registration status
+                        echo "Registered student: $name (ID: $id, Grade: $grade)"
+                    }
+                }
             }
         }
     }
     
     post {
         success {
-            echo 'Pipeline succeeded!'
+            echo 'Student registration process completed successfully!'
         }
         failure {
-            echo 'Pipeline failed!'
+            echo 'Student registration process failed. Please check the logs for details.'
         }
     }
 }
