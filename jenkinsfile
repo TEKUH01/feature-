@@ -2,45 +2,32 @@ pipeline {
     agent any
     
     stages {
-        stage('Generate Sample Data') {
+        stage('Build') {
             steps {
-                script {
-                    writeFile file: 'students.csv', text: """
-                        1,John Doe,A
-                        2,Jane Smith,B
-                        3,Michael Johnson,C
-                        4,Emily Brown,A
-                        5,David Lee,B
-                    """
-                    
-                    echo "Generated sample student data:"
-                    sh 'cat students.csv'
-                }
+                echo 'Building...'
+                // Add build steps here
             }
         }
-        
-        stage('Register Students') {
+        stage('Test') {
             steps {
-                script {
-                    def studentsData = readFile 'students.csv'
-                    studentsData.eachLine { line ->
-                        def (id, name, grade) = line.split(',')
-                        
-                        echo "Registering student: $name (ID: $id, Grade: $grade)"
-                        sleep 1
-                        echo "Registered student: $name (ID: $id, Grade: $grade)"
-                    }
-                }
+                echo 'Testing...'
+                // Add test steps here
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying...'
+                // Add deployment steps here
             }
         }
     }
     
     post {
         success {
-            echo 'Student registration process completed successfully!'
+            echo 'Pipeline succeeded!'
         }
         failure {
-            echo 'Student registration process failed. Please check the logs for details.'
+            echo 'Pipeline failed!'
         }
     }
 }
