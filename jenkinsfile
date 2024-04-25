@@ -5,7 +5,6 @@ pipeline {
         stage('Generate Sample Data') {
             steps {
                 script {
-                    // Generate sample student data
                     writeFile file: 'students.csv', text: """
                         1,John Doe,A
                         2,Jane Smith,B
@@ -14,7 +13,6 @@ pipeline {
                         5,David Lee,B
                     """
                     
-                    // Display the generated sample data
                     echo "Generated sample student data:"
                     sh 'cat students.csv'
                 }
@@ -24,16 +22,12 @@ pipeline {
         stage('Register Students') {
             steps {
                 script {
-                    // Loop through each line in the CSV file and simulate registering the students
                     def studentsData = readFile 'students.csv'
                     studentsData.eachLine { line ->
                         def (id, name, grade) = line.split(',')
                         
-                        // Simulate registering the student
                         echo "Registering student: $name (ID: $id, Grade: $grade)"
-                        sleep 1  // Simulate some processing time
-                        
-                        // Output registration status
+                        sleep 1
                         echo "Registered student: $name (ID: $id, Grade: $grade)"
                     }
                 }
